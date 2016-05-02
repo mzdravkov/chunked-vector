@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	err := typewriter.Register(NewSetWriter())
+	err := typewriter.Register(NewChunkedVecWriter())
 	if err != nil {
 		panic(err)
 	}
