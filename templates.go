@@ -171,7 +171,7 @@ func (cv *{{.Name}}ChunkedVec) Equal(other *{{.Name}}ChunkedVec) bool {
 		}
 
 		for i := 0; i < len1; i++ {
-			if e1.Value.([]{{.Pointer}}{{.Name}})[i] != e2.Value.([]string)[i] {
+			if e1.Value.([]{{.Pointer}}{{.Name}})[i] != e2.Value.([]{{.Pointer}}{{.Name}})[i] {
 				return false
 			}
 		}
@@ -217,7 +217,7 @@ func (cv *{{.Name}}ChunkedVec) String() string {
 	}
 	fmt.Fprintf(&buff, "\n}")
 
-	return buff.{{.Name}}()
+	return buff.String()
 }
 `,
 	TypeConstraint: typewriter.Constraint{Comparable: true},
