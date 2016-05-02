@@ -9,12 +9,6 @@ var templates = typewriter.TemplateSlice{
 var chunkedVec = &typewriter.Template{
 	Name: "ChunkedVec",
 	Text: `
-import (
-	"bytes"
-	"container/list"
-	"fmt"
-)
-
 type {{.Name}}ChunkedVec struct {
 	list      *list.List
 	ChunkSize uint
