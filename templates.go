@@ -18,7 +18,7 @@ import (
 type StringChunkedVec struct {
 	list      *list.List
 	ChunkSize uint
-	Empty     string
+	Empty     {{.Pointer}}{{.Name}}
 }
 
 // Creates a new StringChunkedVec with chunkSize as provided
@@ -34,12 +34,12 @@ func NewStringChunkedVec(chunkSize uint) *StringChunkedVec {
 }
 
 // Adds the element to the ChunkedVec and returns the position it was added to
-func (cv *StringChunkedVec) Add(element string) (uint, uint) {
+func (cv *StringChunkedVec) Add(element {{.Pointer}}{{.Name}}) (uint, uint) {
 	listIndex := 0
 	for e := cv.list.Front(); e != nil; e = e.Next() {
-		for index, value := range e.Value.([]string) {
+		for index, value := range e.Value.([]{{.Pointer}}{{.Name}}) {
 			if value == cv.Empty {
-				e.Value.([]string)[index] = element
+				e.Value.([]{{.Pointer}}{{.Name}})[index] = element
 				return uint(listIndex), uint(index)
 			}
 		}
@@ -47,7 +47,7 @@ func (cv *StringChunkedVec) Add(element string) (uint, uint) {
 		listIndex++
 	}
 
-	slice := make([]string, cv.ChunkSize)
+	slice := make([]{{.Pointer}}{{.Name}}, cv.ChunkSize)
 	slice[0] = element
 	cv.list.PushBack(slice)
 
@@ -55,14 +55,14 @@ func (cv *StringChunkedVec) Add(element string) (uint, uint) {
 }
 
 // Overwrites the given position to hold the given value
-func (cv *StringChunkedVec) PutAt(element string, listIndex, sliceIndex uint) {
+func (cv *StringChunkedVec) PutAt(element {{.Pointer}}{{.Name}}, listIndex, sliceIndex uint) {
 	var i uint = 0
 	e := cv.list.Front()
 	for ; i < listIndex; e = e.Next() {
 		i++
 	}
 
-	e.Value.([]string)[sliceIndex] = element
+	e.Value.([]{{.Pointer}}{{.Name}})[sliceIndex] = element
 }
 
 // Puts the cv.Empty value at the given position
@@ -71,21 +71,21 @@ func (cv *StringChunkedVec) DeleteAt(listIndex, sliceIndex uint) {
 }
 
 // Returns the value that is on the given position
-func (cv *StringChunkedVec) Get(listIndex, sliceIndex uint) string {
+func (cv *StringChunkedVec) Get(listIndex, sliceIndex uint) {{.Pointer}}{{.Name}} {
 	var i uint = 0
 	e := cv.list.Front()
 	for ; i < listIndex; e = e.Next() {
 		i++
 	}
 
-	return e.Value.([]string)[sliceIndex]
+	return e.Value.([]{{.Pointer}}{{.Name}})[sliceIndex]
 }
 
 // Remove list nodes that has arrays that are with the Empty element only
 func (cv *StringChunkedVec) Shrink() {
 	for e := cv.list.Front(); e != nil; e = e.Next() {
 		allEmpty := true
-		for _, value := range e.Value.([]string) {
+		for _, value := range e.Value.([]{{.Pointer}}{{.Name}}) {
 			if value != cv.Empty {
 				allEmpty = false
 				break
@@ -103,7 +103,7 @@ func (cv *StringChunkedVec) Len() int {
 	number := 0
 
 	for e := cv.list.Front(); e != nil; e = e.Next() {
-		for _, value := range e.Value.([]string) {
+		for _, value := range e.Value.([]{{.Pointer}}{{.Name}}) {
 			if value != cv.Empty {
 				number++
 			}
@@ -120,12 +120,12 @@ func (cv *StringChunkedVec) Cap() int {
 }
 
 // Iter returns a channel of type {{.Pointer}}{{.Name}} that you can range over.
-func (cv *StringChunkedVec) Iter() <-chan string {
-	ch := make(chan string)
+func (cv *StringChunkedVec) Iter() <-chan {{.Pointer}}{{.Name}} {
+	ch := make(chan {{.Pointer}}{{.Name}})
 
 	go func() {
 		for e := cv.list.Front(); e != nil; e = e.Next() {
-			for _, value := range e.Value.([]string) {
+			for _, value := range e.Value.([]{{.Pointer}}{{.Name}}) {
 				ch <- value
 			}
 			close(ch)
@@ -136,9 +136,9 @@ func (cv *StringChunkedVec) Iter() <-chan string {
 }
 
 // Checks if the StringChunkedVec contains the given element
-func (cv *StringChunkedVec) Contains(element string) bool {
+func (cv *StringChunkedVec) Contains(element {{.Pointer}}{{.Name}}) bool {
 	for e := cv.list.Front(); e != nil; e = e.Next() {
-		for _, value := range e.Value.([]string) {
+		for _, value := range e.Value.([]{{.Pointer}}{{.Name}}) {
 			if value == element {
 				return true
 			}
@@ -149,7 +149,7 @@ func (cv *StringChunkedVec) Contains(element string) bool {
 }
 
 // Checks if the StringChunkedVec contains all of the given element
-func (cv *StringChunkedVec) ContainsAll(searchingFor ...string) bool {
+func (cv *StringChunkedVec) ContainsAll(searchingFor ...{{.Pointer}}{{.Name}}) bool {
 	for _, s := range searchingFor {
 		if !cv.Contains(s) {
 			return false
@@ -170,14 +170,14 @@ func (cv *StringChunkedVec) Equal(other *StringChunkedVec) bool {
 
 	e2 := other.list.Front()
 	for e1 := cv.list.Front(); e1 != nil; e1 = e1.Next() {
-		len1 := len(e1.Value.([]string))
-		len2 := len(e2.Value.([]string))
+		len1 := len(e1.Value.([]{{.Pointer}}{{.Name}}))
+		len2 := len(e2.Value.([]{{.Pointer}}{{.Name}}))
 		if len1 != len2 {
 			return false
 		}
 
 		for i := 0; i < len1; i++ {
-			if e1.Value.([]string)[i] != e2.Value.([]string)[i] {
+			if e1.Value.([]{{.Pointer}}{{.Name}})[i] != e2.Value.([]string)[i] {
 				return false
 			}
 		}
@@ -195,7 +195,7 @@ func (cv *StringChunkedVec) Clone() *StringChunkedVec {
 
 	var listIndex uint = 0
 	for e := cv.list.Front(); e != nil; e = e.Next() {
-		for index, value := range e.Value.([]string) {
+		for index, value := range e.Value.([]{{.Pointer}}{{.Name}}) {
 			clonedStringChunkedVec.PutAt(value, listIndex, uint(index))
 		}
 
@@ -216,7 +216,7 @@ func (cv *StringChunkedVec) String() string {
 	var buff bytes.Buffer
 	fmt.Fprintf(&buff, "{\n")
 	for e := cv.list.Front(); e != nil; e = e.Next() {
-		slice := e.Value.([]string)
+		slice := e.Value.([]{{.Pointer}}{{.Name}})
 		if _, err := fmt.Fprintf(&buff, fmt.Sprintf("\t%s\n", slice)); err != nil {
 			panic("Can't write to buffer")
 		}
