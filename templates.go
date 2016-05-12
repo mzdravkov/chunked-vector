@@ -158,11 +158,11 @@ func (cv *{{.Name}}ChunkedVec) ContainsAll(searchingFor ...{{.Pointer}}{{.Name}}
 // with slices that have the same values
 func (cv *{{.Name}}ChunkedVec) Equal(other *{{.Name}}ChunkedVec) bool {
 	// no worries, the complexity of this is O(1)
-	if cv.List.Len() != other.list.Len() {
+	if cv.List.Len() != other.List.Len() {
 		return false
 	}
 
-	e2 := other.list.Front()
+	e2 := other.List.Front()
 	for e1 := cv.List.Front(); e1 != nil; e1 = e1.Next() {
 		len1 := len(e1.Value.([]{{.Pointer}}{{.Name}}))
 		len2 := len(e2.Value.([]{{.Pointer}}{{.Name}}))
