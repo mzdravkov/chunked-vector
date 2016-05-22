@@ -75,6 +75,18 @@ func (cv *{{.Name}}ChunkedVec) Get(listIndex, sliceIndex uint) {{.Pointer}}{{.Na
 	return e.Value.([]{{.Pointer}}{{.Name}})[sliceIndex]
 }
 
+// Adds chunks (list nodes) to the {{.Name}}ChunkedVec
+func (cv *{{.Name}}ChunkedVec) Grow(n int) {
+	if n < 0 {
+		panic("Can't grow {{.Name}}ChunkedVec with a negative amount")
+	}
+
+	for i := 0; i < n; i++ {
+		slice := make([]{{.Pointer}}{{.Name}}, cv.ChunkSize)
+		cv.List.PushBack(slice)
+	}
+}
+
 // Remove list nodes that has arrays that are with the Empty element only
 func (cv *{{.Name}}ChunkedVec) Shrink() {
 	for e := cv.List.Front(); e != nil; e = e.Next() {
